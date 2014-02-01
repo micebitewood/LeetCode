@@ -9,55 +9,29 @@
 public class Solution {
     public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
         if (node == null)
-            return node;
-        Set<UndirectedGraphNode> set = new HashSet<UndirectedGraphNode>();
+            return null;
+        Map<UndirectedGraphNode, UndirectedGraphNode> map = new HashMap<UndirectedGraphNode, UndirectedGraphNode>();
         Queue<UndirectedGraphNode> queue = new LinkedList<UndirectedGraphNode>();
         queue.add(node);
         while (queue.size() > 0) {
-            UndirectedGraphNode temp = queue.poll();
-            UndirectedGraphNode newTemp = new UndirectedGraphNode(temp.label);
-            set.add(temp);
-            for (UndirectedGraphNode neighbor: temp.neighbors) {
-                newTemp.neighbors.add(neighbor);
-                if (!set.contains(neighbor)) {
+            UndirectedGraphNode n = queue.poll();
+            if (!map.containsKey(n)) {
+                UndirectedGraphNode n2 = new UndirectedGraphNode(n.label);
+                for (UndirectedGraphNode neighbor : n.neighbors) {
+                    n2.neighbors.add(neighbor);
                     queue.add(neighbor);
-                    set.add(neighbor);
                 }
-            }
-            temp.neighbors.add(newTemp);
-        }
-        queue.add(node);
-        set = new HashSet<UndirectedGraphNode>();
-        while (queue.size() > 0) {
-            UndirectedGraphNode temp = queue.poll();
-            set.add(temp);
-            UndirectedGraphNode newTemp = temp.neighbors.get(temp.neighbors.size() - 1);
-            ArrayList<UndirectedGraphNode> neighbors = newTemp.neighbors;
-            newTemp.neighbors = new ArrayList<UndirectedGraphNode>();
-            for (UndirectedGraphNode neighbor: neighbors) {
-                if (!set.contains(neighbor)) {
-                    queue.add(neighbor);
-                    set.add(neighbor);
-                }
-                UndirectedGraphNode newNeighbor = neighbor.neighbors.get(neighbor.neighbors.size() - 1);
-                newTemp.neighbors.add(newNeighbor);
+                map.put(n, n2);
             }
         }
-        queue.add(node);
-        UndirectedGraphNode newNode = node.neighbors.get(node.neighbors.size() - 1);
-        set = new HashSet<UndirectedGraphNode>();
-        while (queue.size() > 0) {
-            UndirectedGraphNode temp = queue.poll();
-            set.add(temp);
-            for (int i = 0; i < temp.neighbors.size() - 1; i++) {
-                UndirectedGraphNode neighbor = temp.neighbors.get(i);
-                if (!set.contains(neighbor)) {
-                    queue.add(neighbor);
-                    set.add(neighbor);
-                }
+        for (UndirectedGraphNode key : map.keySet()) {
+            UndirectedGraphNode n = map.get(key);
+            ArrayList<UndirectedGraphNode> list = n.neighbors;
+            n.neighbors = new ArrayList<UndirectedGraphNode>();
+            for (UndirectedGraphNode neighbor : list) {
+                n.neighbors.add(map.get(neighbor));
             }
-            temp.neighbors.remove(temp.neighbors.size() - 1);
         }
-        return newNode;
+        return map.get(node);
     }
 }

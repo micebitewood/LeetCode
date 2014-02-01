@@ -1,86 +1,68 @@
 public class Solution {
     public void solve(char[][] board) {
-        if (board == null || board.length == 0 || board[0].length == 0)
+        if (board == null || board.length == 0)
             return;
-        int n = board.length;
-        int m = board[0].length;
-        for (int i = 0; i < n; i++) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
             if (board[i][0] == 'O') {
-                board[i][0] = '.';
+                span(board, i, 0);
             }
-            if (board[i][m - 1] == 'O') {
-                board[i][m - 1] = '.';
+            if (board[i][n - 1] == 'O') {
+                span(board, i, n - 1);
             }
         }
-        for (int j = 1; j < m - 1; j++) {
-            upAndDown(board, j, n);
-        }
-        for (int j = m - 2; j > 0; j--) {
-            upAndDown(board, j, n);
-        }
-        for (int j = 0; j < m; j++) {
+        for (int j = 0; j < n; j++) {
             if (board[0][j] == 'O') {
-                board[0][j] = '.';
+                span(board, 0, j);
             }
-            if (board[n - 1][j] == 'O') {
-                board[n - 1][j] = '.';
+            if (board[m - 1][j] == 'O') {
+                span(board, m - 1, j);
             }
         }
-        for (int i = 1; i < n - 1; i++) {
-            leftAndRight(board, i, m);
-        }
-        for (int i = n - 2; i > 0; i--) {
-            leftAndRight(board, i, m);
-        }
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (board[i][j] == 'O')
-                    board[i][j] = 'X';
-                if (board[i][j] == '.')
-                    board[i][j] = 'O';
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                switch (board[i][j]) {
+                    case '.':
+                        board[i][j] = 'O';
+                        break;
+                    case 'O':
+                        board[i][j] = 'X';
+                }
             }
         }
     }
     
-    private void upAndDown(char[][] board, int j, int n) {
-        if (board[0][j - 1] == '.' && board[0][j] == 'O')
-            board[0][j] = '.';
-        for (int i = 1; i < n; i++) {
-            if (board[i][j] != 'O')
-                continue;
-            if (board[i - 1][j] == '.')
-                board[i][j] = '.';
-            else if (board[i][j - 1] == '.')
-                board[i][j] = '.';
-            else if (board[i][j + 1] == '.')
-                board[i][j] = '.';
-        }
-        for (int i = n - 2; i >= 0; i--) {
-            if (board[i][j] != 'O')
-                continue;
-            if (board[i + 1][j] == '.')
-                board[i][j] = '.';
+    private void span(char[][] board, int i, int j) {
+        board[i][j] = '.';
+        String head = getStr(i, j);
+        Queue<String> queue = new LinkedList<String>();
+        queue.add(head);
+        while (queue.size() > 0) {
+            String[] pos = queue.poll().split("&");
+            int x = Integer.parseInt(pos[0]);
+            int y = Integer.parseInt(pos[1]);
+            if (x - 1 >= 0 && board[x - 1][y] == 'O') {
+                board[x - 1][y] = '.';
+                queue.add(getStr(x - 1, y));
+            }
+            if (y - 1 >= 0 && board[x][y - 1] == 'O') {
+                board[x][y - 1] = '.';
+                queue.add(getStr(x, y - 1));
+            }
+            if (x + 1 < board.length && board[x + 1][y] == 'O') {
+                board[x + 1][y] = '.';
+                queue.add(getStr(x + 1, y));
+            }
+            if (y + 1 < board[0].length && board[x][y + 1] == 'O') {
+                board[x][y + 1] = '.';
+                queue.add(getStr(x, y + 1));
+            }
         }
     }
     
-    private void leftAndRight(char[][] board, int i, int m) {
-        if (board[i - 1][0] == '.' && board[i][0] == 'O')
-            board[i][0] = '.';
-        for (int j = 1; j < m; j++) {
-            if (board[i][j] != 'O')
-                continue;
-            if (board[i][j - 1] == '.')
-                board[i][j] = '.';
-            else if (board[i - 1][j] == '.')
-                board[i][j] = '.';
-            else if (board[i + 1][j] == '.')
-                board[i][j] = '.';
-        }
-        for (int j = m - 2; j >= 0; j--) {
-            if (board[i][j] != 'O')
-                continue;
-            if (board[i][j + 1] == '.')
-                board[i][j] = '.';
-        }
+    private String getStr(int i, int j) {
+        return i + "&" + j;
     }
+    
 }

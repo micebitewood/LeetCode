@@ -1,35 +1,27 @@
 public class Solution {
     public int canCompleteCircuit(int[] gas, int[] cost) {
-        int totalGas = sum(gas);
-        int totalCost = sum(cost);
-        if (totalGas < totalCost)
-            return -1;
-        int i = 0;
-        while (i < gas.length) {
-            totalGas = 0;
-            totalCost = 0;
-            for (int j = 0; j < gas.length; j++) {
-                int ind = (i + j) % gas.length;
-                totalGas += gas[ind];
-                totalCost += cost[ind];
-                if (totalGas < totalCost) {
-                    if (ind + 1 < i)
-                        return -1;
-                    i = ind + 1;
+        int ind = 0;
+        int gasSum = 0;
+        int costSum = 0;
+        boolean completed = false;
+        while (!completed) {
+            for (int i = 0; i < gas.length; i++) {
+                if (i + ind == gas.length) {
+                    completed = true;
+                    ind -= gas.length;
+                }
+                gasSum += gas[i + ind];
+                costSum += cost[i + ind];
+                if (gasSum < costSum) {
+                    gasSum = 0;
+                    costSum = 0;
+                    ind = i + ind + 1;
                     break;
                 }
             }
-            if (totalGas == sum(gas))
-                return i;
+            if (gasSum != 0)
+                return (ind + gas.length) % gas.length;
         }
         return -1;
-    }
-    
-    private int sum(int[] arr) {
-        int res = 0;
-        for (int num: arr) {
-            res += num;
-        }
-        return res;
     }
 }

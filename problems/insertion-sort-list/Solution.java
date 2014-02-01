@@ -13,27 +13,23 @@ public class Solution {
     public ListNode insertionSortList(ListNode head) {
         if (head == null || head.next == null)
             return head;
-        ListNode tempHead = new ListNode(0);
-        tempHead.next = head;
-        ListNode tail = tempHead;
-        while (tail.next != null) {
-            ListNode next = tail.next;
-            ListNode ptr = tempHead;
-            while(ptr != tail) {
-                if (ptr.next.val < next.val) {
-                    ptr = ptr.next;
-                } else {
-                    break;
-                }
-            }
-            if (ptr != tail) {
-                tail.next = next.next;
-                next.next = ptr.next;
-                ptr.next = next;
+        ListNode tHead = new ListNode(0);
+        tHead.next = head;
+        ListNode cur = head;
+        while (cur.next != null) {
+            if (cur.next.val >= cur.val) {
+                cur = cur.next;
             } else {
-                tail = tail.next;
+                ListNode temp = tHead;
+                while (temp.next.val < cur.next.val) {
+                    temp = temp.next;
+                }
+                ListNode next = cur.next;
+                cur.next = next.next;
+                next.next = temp.next;
+                temp.next = next;
             }
         }
-        return tempHead.next;
+        return tHead.next;
     }
 }

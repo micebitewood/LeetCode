@@ -1,35 +1,36 @@
 public class Solution {
+    ArrayList<ArrayList<String>> res;
     public ArrayList<ArrayList<String>> partition(String s) {
-        ArrayList<ArrayList<String>> res = new ArrayList<ArrayList<String>>();
-        if (s == null || s.isEmpty())
+        res = new ArrayList<ArrayList<String>>();
+        if (s.isEmpty())
             return res;
-        int length = s.length();
-        boolean[][] isPalindrome = new boolean[length][length];
-        for (int i = 0; i < length; i++) {
-            isPalindrome[i][i] = true;
+        int l = s.length();
+        boolean[][] palindrome = new boolean[l][l];
+        for (int i = 0; i < l; i++) {
+            palindrome[i][i] = true;
             for (int j = 0; j < i; j++) {
                 if (s.charAt(i) == s.charAt(j)) {
-                    if (j + 1 >= i - 1)
-                        isPalindrome[j][i] = true;
-                    else if (isPalindrome[j + 1][i - 1])
-                        isPalindrome[j][i] = true;
+                    if (j == i - 1 || palindrome[j + 1][i - 1]) {
+                        palindrome[j][i] = true;
+                    }
                 }
             }
         }
-        getRes(isPalindrome, s, res, new ArrayList<String>(), 0);
+        getRes(palindrome, s, 0, new LinkedList<String>());
         return res;
     }
     
-    private void getRes(boolean[][] isPalindrome, String s, ArrayList<ArrayList<String>> res, ArrayList<String> list, int start) {
+    private void getRes(boolean[][] palindrome, String s, int start, Deque<String> stack) {
         if (start == s.length()) {
-            res.add(new ArrayList<String>(list));
-        } else {
-            for (int end = start; end < s.length(); end++) {
-                if (isPalindrome[start][end]) {
-                    list.add(s.substring(start, end + 1));
-                    getRes(isPalindrome, s, res, list, end + 1);
-                    list.remove(list.size() - 1);
-                }
+            res.add(new ArrayList<String>(stack));
+            return;
+        }
+        for (int i = start; i < s.length(); i++) {
+            if (palindrome[start][i]) {
+                String str = s.substring(start, i + 1);
+                stack.addLast(str);
+                getRes(palindrome, s, i + 1, stack);
+                stack.pollLast();
             }
         }
     }

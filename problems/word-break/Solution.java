@@ -1,18 +1,15 @@
 public class Solution {
     public boolean wordBreak(String s, Set<String> dict) {
-        boolean[] arr = new boolean[s.length()];
-        for (int i = 0; i < s.length(); i++) {
-            if (dict.contains(s.substring(0, i + 1)))
-                arr[i] = true;
-            else {
-                for (int j = 0; j < i; j++) {
-                    if (arr[j] && dict.contains(s.substring(j + 1, i + 1))) {
-                        arr[i] = true;
-                        break;
-                    }
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 1; i < dp.length; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (dp[j] && dict.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
                 }
             }
         }
-        return arr[arr.length - 1];
+        return dp[dp.length - 1];
     }
 }

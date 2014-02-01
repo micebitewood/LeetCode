@@ -1,53 +1,68 @@
 public class LRUCache {
-    private Map<Integer, ListNode> table = new HashMap<Integer, ListNode>();
-    private int capacity;
-    ListNode head;
-    ListNode tail;
+    ListNode head, tail;
+    int capacity;
+    Map<Integer, ListNode> posTable = new HashMap<Integer, ListNode>();
+    int size;
     
     public LRUCache(int capacity) {
-        this.capacity = capacity;
         head = new ListNode(0, 0);
         tail = head;
+        this.capacity = capacity;
+        size = 0;
     }
     
     public int get(int key) {
-        if (!table.containsKey(key))
+        if (!posTable.containsKey(key)) {
             return -1;
-        ListNode temp = table.get(key);
-        if (temp.next == tail)
-            return tail.val;
-        tail.next = temp.next;
-        table.put(key, tail);
-        tail = tail.next;
-        temp.next = tail.next;
-        table.put(temp.next.key, temp);
-        tail.next = null;
+        }
+        refresh(key);
         return tail.val;
     }
     
     public void set(int key, int value) {
-        get(key);
-        if (table.containsKey(key)) {
+        if (posTable.containsKey(key)) {
+            refresh(key);
             tail.val = value;
-            return;
+        } else {
+            if (capacity == 0)
+                return;
+            if (size == capacity) {
+                int k = head.next.key;
+                posTable.remove(k);
+                head = head.next;
+                insert(new ListNode(key, value));
+            } else {
+                insert(new ListNode(key, value));
+                size++;
+            }
         }
-        if (table.size() == capacity && !table.containsKey(key)) {
-            table.remove(head.next.key);
-            head = head.next;
-        }
-        tail.next = new ListNode(key, value);
-        table.put(key, tail);
-        tail = tail.next;
     }
     
-    private class ListNode {
-        int key;
-        int val;
+    private void insert(ListNode node) {
+        tail.next = node;
+        posTable.put(node.key, tail);
+        tail = node;
+    }
+    
+    private void refresh(int key) {
+        ListNode prev = posTable.get(key);
+        ListNode node = prev.next;
+        if (node != tail) {
+            posTable.put(node.next.key, prev);
+            prev.next = node.next;
+            node.next = null;
+            tail.next = node;
+            posTable.put(key, tail);
+            tail = node;
+        }
+    }
+    
+    class ListNode {
+        int key, val;
         ListNode next;
-        
-        private ListNode(int key, int val) {
+        ListNode(int key, int value) {
             this.key = key;
-            this.val = val;
+            this.val = value;
         }
     }
 }

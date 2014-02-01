@@ -9,20 +9,26 @@
  */
 public class Solution {
     public int sumNumbers(TreeNode root) {
+        int res = 0;
         if (root == null)
             return 0;
-        return sum(root, 0);
-    }
-    
-    private int sum(TreeNode root, int num) {
-        int newNum = num * 10 + root.val;
-        if (root.left == null && root.right == null)
-            return newNum;
-        int res = 0;
-        if (root.left != null)
-            res += sum(root.left, newNum);
-        if (root.right != null)
-            res += sum(root.right, newNum);
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root);
+        while (queue.size() > 0) {
+            TreeNode node = queue.poll();
+            if (node.left == null && node.right == null) {
+                res += node.val;
+                continue;
+            }
+            if (node.left != null) {
+                node.left.val += node.val * 10;
+                queue.add(node.left);
+            }
+            if (node.right != null) {
+                node.right.val += node.val * 10;
+                queue.add(node.right);
+            }
+        }
         return res;
     }
 }
