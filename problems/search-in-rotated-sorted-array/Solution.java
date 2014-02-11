@@ -11,16 +11,17 @@ public class Solution {
         int m = (l + r) / 2;
         if (A[m] == target)
             return m;
-        else if (A[l] < A[r - 1]) {
-            if (target > A[m])
-                return binarySearch(A, m + 1, r, target);
-            else
+        if (A[m] > A[l]) {
+            if (target < A[m] && target >= A[l])
                 return binarySearch(A, l, m, target);
+            else
+                return binarySearch(A, m + 1, r, target);
         } else {
-            int p = binarySearch(A, m + 1, r, target);
-            if (p == -1)
-                p = binarySearch(A, l, m, target);
-            return p;
+            if (target >= A[l] || target < A[m]) {
+                return binarySearch(A, l, m, target);
+            } else {
+                return binarySearch(A, m + 1, r, target);
+            }
         }
     }
 }

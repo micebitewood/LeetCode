@@ -15,7 +15,7 @@ public class Solution {
             else
                 return binarySearch(A, left, mid, target);
         } else {
-            return binarySearch(A, left, mid, target) | binarySearch(A, mid + 1, right, target);
+            return binarySearch(A, left, mid, target) || binarySearch(A, mid + 1, right, target);
         }
     }
 }

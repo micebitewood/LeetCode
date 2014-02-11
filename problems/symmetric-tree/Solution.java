@@ -11,22 +11,14 @@ public class Solution {
     public boolean isSymmetric(TreeNode root) {
         if (root == null)
             return true;
-        if (root.left == null && root.right == null)
-            return true;
-        if (root.left == null || root.right == null)
-            return false;
-        if (isSymmetric(root.left, root.right))
-            return true;
-        return false;
+        return isSymmetric(root.left, root.right);
     }
     
-    private boolean isSymmetric(TreeNode node1, TreeNode node2) {
-        if (node1 == null && node2 == null)
+    private boolean isSymmetric(TreeNode n1, TreeNode n2) {
+        if (n1 == null && n2 == null)
             return true;
-        if (node1 == null || node2 == null)
+        if (n1 == null || n2 == null)
             return false;
-        if (isSymmetric(node1.left, node2.right) && isSymmetric(node1.right, node2.left) && node1.val == node2.val)
-            return true;
-        return false;
+        return n1.val == n2.val && isSymmetric(n1.left, n2.right) && isSymmetric(n1.right, n2.left);
     }
 }

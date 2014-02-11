@@ -1,19 +1,16 @@
 public class Solution {
+    ArrayList<Integer> res;
     public ArrayList<Integer> grayCode(int n) {
-        ArrayList<Integer> res = new ArrayList<Integer>();
+        res = new ArrayList<Integer>();
         res.add(0);
         if (n == 0)
             return res;
-        int m = 4;
         res.add(1);
-        while (m <= Math.pow(2, n)) {
-            int last = res.size() - 1;
-            for (int i = last; i >= 0; i--) {
-                int num = ((m - 1) & res.get(i));
-                num |= (m / 2);
-                res.add(num);
+        for (int i = 1; i < n; i++) {
+            int base = (1 << i);
+            for (int j = res.size() - 1; j >= 0; j--) {
+                res.add(base | res.get(j));
             }
-            m *= 2;
         }
         return res;
     }

@@ -1,26 +1,29 @@
 public class Solution {
+    ArrayList<ArrayList<Integer>> res;
+    ArrayList<Integer> list;
     public ArrayList<ArrayList<Integer>> permute(int[] num) {
-        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
-        permute(num, 0, num.length, res);
+        res = new ArrayList<ArrayList<Integer>>();
+        list = new ArrayList<Integer>();
+        for (int n : num) {
+            list.add(n);
+        }
+        permute(0);
         return res;
     }
     
-    private void permute(int[] num, int l, int r, ArrayList<ArrayList<Integer>> res) {
-        if (l == r - 1) {
-            ArrayList<Integer> list = new ArrayList<Integer>();
-            for (int n : num)
-                list.add(n);
-            res.add(list);
-        } else {
-            for (int i = l; i < r; i++) {
-                int t = num[i];
-                num[i] = num[l];
-                num[l] = t;
-                permute(num, l + 1, r, res);
-                t = num[i];
-                num[i] = num[l];
-                num[l] = t;
-            }
+    private void permute(int start) {
+        if (start == list.size() - 1) {
+            res.add(new ArrayList<Integer>(list));
+            return;
+        }
+        int origin = list.get(start);
+        for (int i = start; i < list.size(); i++) {
+            int num = list.get(i);
+            list.set(start, num);
+            list.set(i, origin);
+            permute(start + 1);
+            list.set(start, origin);
+            list.set(i, num);
         }
     }
 }

@@ -11,19 +11,18 @@
  */
 public class Solution {
     public ListNode deleteDuplicates(ListNode head) {
-        if (head == null)
-            return null;
         ListNode temp = new ListNode(0);
         temp.next = head;
-        ListNode node = temp;
-        while (node.next != null && node.next.next != null) {
-            if (node.next.val == node.next.next.val) {
-                ListNode next = node.next.next;
-                while (next.next != null && next.next.val == node.next.val)
-                    next = next.next;
-                node.next = next.next;
-            } else
+        ListNode cur = temp;
+        while (cur.next != null && cur.next.next != null) {
+            ListNode node = cur.next;
+            while (node.next != null && node.next.val == cur.next.val) {
                 node = node.next;
+            }
+            if (node != cur.next) {
+                cur.next = node.next;
+            } else
+                cur = node;
         }
         return temp.next;
     }

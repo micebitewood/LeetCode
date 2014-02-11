@@ -9,25 +9,22 @@
  */
 public class Solution {
     public void flatten(TreeNode root) {
-        if (root == null)
-            return;
-        myFunc(root);
+        if (root != null) {
+            getMax(root);
+        }
     }
     
-    public TreeNode myFunc(TreeNode root) {
-        if (root.left == null && root.right == null)
-            return root;
-        TreeNode ret = root;
-        if (root.right != null)
-            ret = myFunc(root.right);
+    private TreeNode getMax(TreeNode root) {
+        TreeNode max = root;
         if (root.left != null) {
-            TreeNode last = myFunc(root.left);
-            if (root.right == null)
-                ret = last;
-            last.right = root.right;
+            max = getMax(root.left);
+            max.right = root.right;
             root.right = root.left;
             root.left = null;
         }
-        return ret;
+        if (max.right != null) {
+            max = getMax(max.right);
+        }
+        return max;
     }
 }

@@ -11,32 +11,27 @@
  */
 public class Solution {
     public ListNode partition(ListNode head, int x) {
-        ListNode tempHead = new ListNode(0);
-        tempHead.next = head;
-        ListNode first = tempHead;
-        ListNode second = head;
-        while (first.next != null && first.next.val < x) {
-            first = first.next;
-        }
-        if (first.next == null)
-            return head;
-        second = first.next;
-        while (second.next != null && second.next.val >= x) {
+        ListNode temp = new ListNode(0);
+        temp.next = head;
+        ListNode first = temp;
+        ListNode second = temp;
+        while (second.next != null && second.next.val < x) {
             second = second.next;
         }
         if (second.next == null)
             return head;
+        first = second;
         while (second.next != null) {
-            if (second.next.val < x) {
-                ListNode next = second.next;
-                second.next = next.next;
-                next.next = first.next;
-                first.next = next;
-                first = next;
-            } else {
+            if (second.next.val >= x) {
                 second = second.next;
+            } else {
+                ListNode node = second.next;
+                second.next = node.next;
+                node.next = first.next;
+                first.next = node;
+                first = node;
             }
         }
-        return tempHead.next;
+        return temp.next;
     }
 }

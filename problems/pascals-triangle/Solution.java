@@ -1,22 +1,22 @@
 public class Solution {
+    ArrayList<ArrayList<Integer>> res;
     public ArrayList<ArrayList<Integer>> generate(int numRows) {
-        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        res = new ArrayList<ArrayList<Integer>>();
         if (numRows == 0)
             return res;
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        list.add(1);
-        res.add(list);
+        Queue<Integer> queue = new LinkedList<Integer>();
+        queue.add(1);
+        res.add(new ArrayList<Integer>(queue));
         for (int i = 1; i < numRows; i++) {
-            ArrayList<Integer> lastList = list;
-            list = new ArrayList<Integer>();
-            list.add(1);
+            int last = queue.poll();
+            queue.add(1);
             for (int j = 1; j < i; j++) {
-                int first = lastList.get(j - 1);
-                int second = lastList.get(j);
-                list.add(first + second);
+                int cur = queue.poll();
+                queue.add(last + cur);
+                last = cur;
             }
-            list.add(1);
-            res.add(list);
+            queue.add(1);
+            res.add(new ArrayList<Integer>(queue));
         }
         return res;
     }

@@ -1,32 +1,36 @@
 public class Solution {
+    int[] res;
     public int[] searchRange(int[] A, int target) {
-        int[] res = new int[2];
-        res[0] = -1;
+        res = new int[2];
+        res[0] = A.length;
         res[1] = -1;
-        if (A == null)
-            return res;
-        int l = 0;
-        int r = A.length;
-        while (l < r) {
-            int m = (l + r) / 2;
-            if (target > A[m])
-                l = m + 1;
-            else
-                r = m;
-        }
-        if (r < A.length && A[r] == target) {
-            res[0] = r;
-            l = r;
-            r = A.length;
-            while (l < r) {
-                int m = (l + r) / 2;
-                if (target < A[m])
-                    r = m;
-                else
-                    l = m + 1;
-            }
-            res[1] = l - 1;
-        }
+        search(A, 0, A.length, target);
+        if (res[1] == -1)
+            res[0] = -1;
         return res;
+    }
+    
+    private void search(int[] A, int l, int r, int target) {
+        if (l == r)
+            return;
+        int m = (l + r) / 2;
+        if (A[m] == target) {
+            res[0] = Math.min(res[0], m);
+            res[1] = Math.max(res[1], m);
+            if (A[l] == target) {
+                res[0] = Math.min(res[0], l);
+            } else {
+                search(A, l, m, target);
+            }
+            if (A[r - 1] == target) {
+                res[1] = Math.max(res[1], r - 1);
+            } else {
+                search(A, m + 1, r, target);
+            }
+        } else if (A[m] > target) {
+            search(A, l, m, target);
+        } else {
+            search(A, m + 1, r, target);
+        }
     }
 }

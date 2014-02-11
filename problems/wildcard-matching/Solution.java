@@ -1,44 +1,38 @@
 public class Solution {
     public boolean isMatch(String s, String p) {
-        if (s.isEmpty()) {
-            if (p.isEmpty() || p.matches("\\**"))
-                return true;
-            else
-                return false;
-        }
-        if (p.isEmpty())
-            return false;
-        if (p.matches("\\**"))
+        if (p.matches("\\*+"))
             return true;
-        int i1 = 0;
-        int i2 = 0;
-        int star = -1;
-        int last = 0;
-        while (i1 < s.length()) {
-            char c1 = s.charAt(i1);
-            char c2 = '\0';
-            if (i2 < p.length()) {
-                c2 = p.charAt(i2);
-            }
+        if (s.isEmpty() && p.isEmpty())
+            return true;
+        int p1 = 0;
+        int p2 = 0;
+        int start = -1;
+        int p11 = -1;
+        while (p1 < s.length()) {
+            char c1 = getChar(s, p1);
+            char c2 = getChar(p, p2);
             if (c1 == c2 || c2 == '?') {
-                i1++;
-                i2++;
+                p1++;
+                p2++;
             } else if (c2 == '*') {
-                star = i2;
-                last = i1;
-                i2++;
-            } else if (star != -1) {
-                i2 = star + 1;
-                last++;
-                i1 = last;
-            } else
+                start = ++p2;
+                p11 = p1;
+            } else if (start != -1){
+                p2 = start;
+                p1 = ++p11;
+            } else {
                 return false;
+            }
         }
-        while (i2 < p.length()) {
-            if (p.charAt(i2) != '*')
-                return false;
-            i2++;
+        if (p1 != s.length() || !p.substring(p2).matches("\\**")) {
+            return false;
         }
         return true;
+    }
+    
+    private char getChar(String s, int i) {
+        if (i >= s.length())
+            return '\n';
+        return s.charAt(i);
     }
 }

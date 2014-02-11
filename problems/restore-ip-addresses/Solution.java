@@ -1,37 +1,30 @@
 public class Solution {
+    ArrayList<String> res;
     public ArrayList<String> restoreIpAddresses(String s) {
-        ArrayList<String> res = new ArrayList<String>();
-        restore(s, res, new StringBuilder(), 0);
+        res = new ArrayList<String>();
+        restore(s, new StringBuilder(), 0);
         return res;
     }
     
-    private void restore(String s, ArrayList<String> res, StringBuilder sb, int count) {
-        if (s.length() > (4 - count) * 3)
-            return;
-        if (s.length() < 4 - count)
-            return;
-        int start = sb.length();
-        if (count == 3) {
-            if (s.charAt(0) == '0' && s.length() > 1)
-                return;
-            if (Integer.parseInt(s) > 255)
-                return;
-            sb.append(s);
-            res.add(sb.toString());
-            sb.delete(start, sb.length());
+    private void restore(String s, StringBuilder sb, int count) {
+        int l = s.length();
+        if (l + count * 3 > 12 || l + count < 4) {
             return;
         }
-        for (int i = 1; i < 4; i++) {
-            if (i > s.length())
-                break;
-            if (s.charAt(0) == '0' && i > 1)
-                break;
-            String num = s.substring(0, i);
-            if (Integer.parseInt(num) > 255)
-                break;
-            sb.append(num + ".");
-            restore(s.substring(i), res, sb, count + 1);
-            sb.delete(start, sb.length());
+        if (count == 3 && Integer.parseInt(s) < 256) {
+            if (s.charAt(0) != '0' || s.equals("0")) {
+                res.add(sb.toString() + s);
+            }
+        } else {
+            int start = sb.length();
+            for (int i = 1; i <= Math.min(3, s.length()); i++) {
+                int num = Integer.parseInt(s.substring(0, i));
+                if (num < 256 && (s.charAt(0) != '0' || i == 1)) {
+                    sb.append(num + ".");
+                    restore(s.substring(i), sb, count + 1);
+                    sb.delete(start, start + i + 1);
+                }
+            }
         }
     }
 }

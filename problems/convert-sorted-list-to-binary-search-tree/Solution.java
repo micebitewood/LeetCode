@@ -17,26 +17,21 @@
  */
 public class Solution {
     public TreeNode sortedListToBST(ListNode head) {
-        if (head == null)
-            return null;
-        ListNode tempHead = new ListNode(0);
-        tempHead.next = head;
-        TreeNode root = toBST(tempHead, null);
-        return root;
+        return getBST(head, null);
     }
     
-    private TreeNode toBST(ListNode head, ListNode tail) {
-        if (head.next == tail)
+    private TreeNode getBST(ListNode head, ListNode tail) {
+        if (head == tail)
             return null;
         ListNode slow = head;
-        ListNode fast = head.next;
+        ListNode fast = head;
         while (fast != tail && fast.next != tail) {
-            slow = slow.next;
             fast = fast.next.next;
+            slow = slow.next;
         }
-        TreeNode root = new TreeNode(slow.next.val);
-        root.left = toBST(head, slow.next);
-        root.right = toBST(slow.next, tail);
+        TreeNode root = new TreeNode(slow.val);
+        root.left = getBST(head, slow);
+        root.right = getBST(slow.next, tail);
         return root;
     }
 }

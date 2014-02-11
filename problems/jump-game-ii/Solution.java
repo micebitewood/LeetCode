@@ -1,20 +1,20 @@
 public class Solution {
     public int jump(int[] A) {
-        int count = 0;
-        int max = 0;
+        if (A.length < 2)
+            return 0;
+        int cur = 0;
+        int jump = 1;
+        int next = 0;
         int i = 0;
-        while (max < A.length - 1) {
-            int next = max;
-            for (;i <= max; i++) {
-                if (i + A[i] > next) {
-                    next = i + A[i];
-                }
+        while (i <= next && next < A.length - 1) {
+            if (i > cur) {
+                cur = next;
+                jump++;
             }
-            if (next == max)
-                return 0;
-            count++;
-            max = next;
+            next = Math.max(A[i] + i, next);
+            i++;
         }
-        return count;
+        return jump;
     }
+    
 }

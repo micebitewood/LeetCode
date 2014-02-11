@@ -1,29 +1,22 @@
 public class Solution {
     public int[] plusOne(int[] digits) {
-        if (digits == null || digits.length == 0)
-            return digits;
-        int i = 0;
-        for (; i < digits.length; i++) {
-            if (digits[i] != 9)
-                break;
-        }
-        if (i == digits.length) {
-            int[] res = new int[digits.length + 1];
-            res[0] = 1;
-            return res;
-        }
         boolean cf = true;
-        for (i = digits.length - 1; i >= 0; i--) {
+        int[] res = new int[digits.length];
+        for (int i = digits.length - 1; i >= 0; i--) {
             if (cf) {
-                if (digits[i] == 9)
-                    digits[i] = 0;
-                else {
-                    digits[i]++;
+                res[i] = digits[i] + 1;
+                if (res[i] < 10) {
                     cf = false;
+                } else {
+                    res[i] = 0;
                 }
             } else
-                break;
+                res[i] = digits[i];
         }
-        return digits;
+        if (cf) {
+            res = new int[digits.length + 1];
+            res[0] = 1;
+        }
+        return res;
     }
 }

@@ -1,34 +1,39 @@
 public class Solution {
     public int ladderLength(String start, String end, HashSet<String> dict) {
+        int level = 2;
+        if (start.equals(end))
+            return 1;
+        Set<String> visited = new HashSet<String>();
         Queue<String> queue = new LinkedList<String>();
         queue.add(start);
+        visited.add(start);
         String nil = "";
         queue.add(nil);
-        int level = 0;
-        Set<String> visited = new HashSet<String>();
-        visited.add(start);
-        while (true) {
+        while (queue.size() > 1) {
             String str = queue.poll();
             if (str == nil) {
                 level++;
-                if (queue.size() == 0)
-                    return 0;
                 queue.add(nil);
             } else {
-                for (int i = 0; i < str.length(); i++) {
-                    String first = str.substring(0, i);
-                    String second = str.substring(i + 1);
+                char[] arr = str.toCharArray();
+                for (int i = 0; i < arr.length; i++) {
+                    char original = arr[i];
                     for (char c = 'a'; c <= 'z'; c++) {
-                        String s = first + String.valueOf(c) + second;
-                        if (s.equals(end))
-                            return level + 2;
-                        if (!visited.contains(s) && dict.contains(s)) {
-                            queue.add(s);
-                            visited.add(s);
+                        arr[i] = c;
+                        String word = new String(arr);
+                        if (word.equals(end)) {
+                            return level;
+                        }
+                        else if (!visited.contains(word) && dict.contains(word)) {
+                            queue.add(word);
+                            visited.add(word);
                         }
                     }
+                    arr[i] = original;
                 }
             }
         }
+        return 0;
     }
+    
 }

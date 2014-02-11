@@ -1,18 +1,14 @@
 public class Solution {
     public boolean canJump(int[] A) {
-        if (A == null)
-            return false;
-        int length = A.length;
-        if (length == 0)
-            return false;
-        int right = 0;
-        for (int i = 0; i < length; i++) {
-            if (right >= A.length - 1)
+        if (A.length < 2)
+            return true;
+        int cur = 0;
+        int r = 0;
+        while (cur <= r) {
+            if (r >= A.length - 1)
                 return true;
-            if (i <= right && A[i] > 0) {
-                right = Math.max(right, i + A[i]);
-            } else if (i > right)
-                return false;
+            r = Math.max(r, A[cur] + cur);
+            cur++;
         }
         return false;
     }

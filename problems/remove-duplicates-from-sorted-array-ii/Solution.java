@@ -2,20 +2,18 @@ public class Solution {
     public int removeDuplicates(int[] A) {
         if (A == null)
             return 0;
-        if (A.length == 0)
-            return 0;
-        int slow = 1;
-        int fast = 1;
-        while (fast < A.length) {
-            A[slow] = A[fast];
-            if (A[slow] == A[slow - 1]) {
-                while (fast < A.length && A[fast] == A[fast - 1]) {
-                    fast++;
-                }
-            } else
-                fast++;
-            slow++;
+        if (A.length < 3)
+            return A.length;
+        int l = 1;
+        int r = 1;
+        while (r < A.length) {
+            A[l] = A[r++];
+            if (A[l] == A[l - 1]) {
+                while (r < A.length && A[r] == A[r - 1])
+                    r++;
+            }
+            l++;
         }
-        return slow;
+        return l;
     }
 }

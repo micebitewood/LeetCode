@@ -1,23 +1,22 @@
 public class Solution {
+    ArrayList<ArrayList<Integer>> res;
     public ArrayList<ArrayList<Integer>> subsets(int[] S) {
-        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
-        if (S == null)
+        res = new ArrayList<ArrayList<Integer>>();
+        Deque<Integer> stack = new ArrayDeque<Integer>();
+        res.add(new ArrayList<Integer>(stack));
+        if (S.length == 0)
             return res;
         Arrays.sort(S);
-        for (int i = 0; i <= S.length; i++)
-            add(S, 0, i, new ArrayList<Integer>(), res);
+        getRes(S, 0, stack);
         return res;
     }
     
-    private void add(int[] S, int start, int count, ArrayList<Integer> list, ArrayList<ArrayList<Integer>> res) {
-        if (count == 0) {
-            res.add(new ArrayList<Integer>(list));
-            return;
-        }
-        for (int i = start; i < S.length; i++) {
-            list.add(S[i]);
-            add(S, i + 1, count - 1, list, res);
-            list.remove(list.size() - 1);
+    private void getRes(int[] s, int start, Deque<Integer> stack) {
+        for (int i = start; i < s.length; i++) {
+            stack.addLast(s[i]);
+            res.add(new ArrayList<Integer>(stack));
+            getRes(s, i + 1, stack);
+            stack.pollLast();
         }
     }
 }

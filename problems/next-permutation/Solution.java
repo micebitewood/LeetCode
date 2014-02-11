@@ -1,45 +1,21 @@
 public class Solution {
     public void nextPermutation(int[] num) {
-        if (num == null)
-            return;
-        int last = num.length - 1;
-        if (last == 0)
-            return;
-        while (last > 0) {
-            if (num[last - 1] >= num[last])
-                last--;
-            else
-                break;
+        int r = num.length - 1;
+        while (r > 0 && num[r - 1] >= num[r]) {
+            r--;
         }
-        if (last == 0) {
+        if (r == 0) {
             Arrays.sort(num);
             return;
-        } else if (last == num.length - 1) {
-            int temp = num[last];
-            num[last] = num[last - 1];
-            num[last - 1] = temp;
-            return;
         }
-        int n = num[last - 1];
-        int second = last;
-        while (second < num.length) {
-            if (num[second] > n) {
-                second++;
-            } else
-                break;
+        int l = r - 1;
+        while (r < num.length && num[r] > num[l]) {
+            r++;
         }
-        second--;
-        int temp = num[last - 1];
-        num[last - 1] = num[second];
-        num[second] = temp;
-        for (int i = last; i < num.length; i++) {
-            for (int j = i + 1; j < num.length; j++) {
-                if (num[j] < num[i]) {
-                    temp = num[j];
-                    num[j] = num[i];
-                    num[i] = temp;
-                }
-            }
-        }
+        r--;
+        int t = num[l];
+        num[l] = num[r];
+        num[r] = t;
+        Arrays.sort(num, l + 1, num.length);
     }
 }

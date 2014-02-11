@@ -1,32 +1,27 @@
 public class Solution {
     public String getPermutation(int n, int k) {
-        Set<Integer> set = new HashSet<Integer>();
-        return get(n, k, set, "");
+        Set<Integer> used = new HashSet<Integer>();
+        return getRes(n, k, used);
     }
-    private String get(int count, int num, Set<Integer> set, String res) {
-        if (count == 1) {
-            int i = 1;
-            while (set.contains(i))
-                i++;
-            return res + i;
+    
+    private String getRes(int n, int k, Set<Integer> used) {
+        int count = 1;
+        for (int i = 2; i < n - used.size(); i++) {
+            count *= i;
         }
-        else {
-            int base = 1;
-            for (int i = 2; i < count; i++) {
-                base *= i;
+        int m = 1;
+        while (used.contains(m))
+            m++;
+        if (used.size() == n - 1)
+            return String.valueOf(m);
+        while (count < k) {
+            k -= count;
+            m++;
+            while (used.contains(m)) {
+                m++;
             }
-            int i = 1;
-            while (set.contains(i))
-                i++;
-            while (num > base) {
-                i++;
-                while (set.contains(i)) {
-                    i++;
-                }
-                num -= base;
-            }
-            set.add(i);
-            return get(count - 1, num, set, res + i);
         }
+        used.add(m);
+        return m + getRes(n, k, used);
     }
 }

@@ -8,33 +8,31 @@
  * }
  */
 public class Solution {
+    ArrayList<ArrayList<Integer>> res;
     public ArrayList<ArrayList<Integer>> pathSum(TreeNode root, int sum) {
-        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        res = new ArrayList<ArrayList<Integer>>();
         if (root == null)
             return res;
-        Deque<Integer> stack = new LinkedList<Integer>();
-        stack.addLast(root.val);
-        root.val = sum - root.val;
-        traverse(root, stack, res);
+        Deque<Integer> deque = new ArrayDeque<Integer>();
+        deque.addLast(root.val);
+        getRes(root, sum - root.val, deque);
         return res;
     }
-    private void traverse(TreeNode root, Deque<Integer> stack, ArrayList<ArrayList<Integer>> res) {
-        if (root.left == null && root.right == null) {
-            if (root.val == 0)
-                res.add(new ArrayList<Integer>(stack));
-            return;
-        }
-        if (root.left != null) {
-            stack.addLast(root.left.val);
-            root.left.val = root.val - root.left.val;
-            traverse(root.left, stack, res);
-            stack.removeLast();
-        }
-        if (root.right != null) {
-            stack.addLast(root.right.val);
-            root.right.val = root.val - root.right.val;
-            traverse(root.right, stack, res);
-            stack.removeLast();
+    
+    private void getRes(TreeNode root, int sum, Deque<Integer> deque) {
+        if (root.left == null && root.right == null && 0 == sum) {
+            res.add(new ArrayList<Integer>(deque));
+        } else {
+            if (root.left != null) {
+                deque.addLast(root.left.val);
+                getRes(root.left, sum - root.left.val, deque);
+                deque.pollLast();
+            }
+            if (root.right != null) {
+                deque.addLast(root.right.val);
+                getRes(root.right, sum - root.right.val, deque);
+                deque.pollLast();
+            }
         }
     }
 }

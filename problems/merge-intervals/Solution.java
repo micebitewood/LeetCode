@@ -8,37 +8,34 @@
  * }
  */
 public class Solution {
+    ArrayList<Interval> res;
     public ArrayList<Interval> merge(ArrayList<Interval> intervals) {
-        ArrayList<Interval> res = new ArrayList<Interval>();
-        if (intervals == null || intervals.size() == 0)
-            return res;
+        res = new ArrayList<Interval>();
         Collections.sort(intervals, new IntervalComparator());
-        List<Integer> starts = new ArrayList<Integer>();
-        List<Integer> ends = new ArrayList<Integer>();
-        for (Interval interval : intervals) {
-            starts.add(interval.start);
-            ends.add(interval.end);
-        }
-        int i = 0;
-        while (i < starts.size()) {
-            int left = starts.get(i);
-            int j = i;
-            i++;
-            int right = ends.get(j);
-            while (i < starts.size() && starts.get(i) <= right) {
-                i++;
-                j++;
-                if (ends.get(j) > right)
-                    right = ends.get(j);
+        Deque<Interval> stack = new ArrayDeque<Interval>(intervals);
+        int s = 0;
+        int e = -1;
+        while (stack.size() > 0) {
+            Interval interval = stack.pop();
+            if (s > e) {
+                s = interval.start;
+                e = interval.end;
+            } else if (interval.start <= e) {
+                e = Math.max(e, interval.end);
+            } else {
+                res.add(new Interval(s, e));
+                s = interval.start;
+                e = interval.end;
             }
-            res.add(new Interval(left, right));
         }
+        if (s <= e)
+            res.add(new Interval(s, e));
         return res;
     }
     
-    private class IntervalComparator implements Comparator<Interval> {
+    class IntervalComparator implements Comparator<Interval> {
         public int compare(Interval i1, Interval i2) {
-            return i1.start - i2.start;
+            return i1.start - i2.start == 0 ? i1.end - i2.end : i1.start - i2.start;
         }
     }
 }

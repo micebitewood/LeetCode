@@ -2,46 +2,51 @@ public class Solution {
     public String minWindow(String S, String T) {
         if (T.isEmpty())
             return "";
-        if (S.length() < T.length())
-            return "";
-        int[] table = new int[256];
-        Set<Character> set = new HashSet<Character>();
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
         int count = 0;
-        for (char ch : T.toCharArray()) {
-            if (table[ch] == 0)
-                count++;
-            table[ch]++;
-            set.add(ch);
-        }
-        int start = 0;
-        int min = 0;
-        int max = S.length() + 1;
-        for (int i = 0; i < S.length(); i++) {
-            char ch = S.charAt(i);
-            if (!set.contains(ch))
-                continue;
-            table[ch]--;
-            if (table[ch] == 0)
-                count--;
-            if (count == 0) {
-                ch = S.charAt(start);
-                while (!set.contains(ch) || table[ch] < 0) {
-                    if (set.contains(ch))
-                        table[ch]++;
-                    start++;
-                    ch = S.charAt(start);
-                }
-                if (i - start < max - min) {
-                    max = i + 1;
-                    min = start;
-                }
-                table[ch]++;
-                start++;
+        for (int i = 0; i < T.length(); i++) {
+            char c = T.charAt(i);
+            if (!map.containsKey(c)) {
+                map.put(c, 0);
                 count++;
             }
+            map.put(c, map.get(c) + 1);
         }
-        if (max - min > S.length())
-            return "";
-        return S.substring(min, max);
+        int l = 0;
+        int r = 0;
+        int min = -1;
+        int max = S.length();
+        while (r < S.length()) {
+            char c = S.charAt(r++);
+            if (map.containsKey(c)) {
+                int n = map.get(c);
+                if (n == 1) {
+                    count--;
+                }
+                map.put(c, n - 1);
+                if (count == 0) {
+                    while (l < r) {
+                        char c2 = S.charAt(l);
+                        if (map.containsKey(c2)) {
+                            int n2 = map.get(c2);
+                            map.put(c2, n2 + 1);
+                            if (n2 == 0) {
+                                break;
+                            }
+                        }
+                        l++;
+                    }
+                    if (r - l < max - min) {
+                        max = r;
+                        min = l;
+                    }
+                    l++;
+                    count++;
+                }
+            }
+        }
+        if (min != -1)
+            return S.substring(min, max);
+        return "";
     }
 }

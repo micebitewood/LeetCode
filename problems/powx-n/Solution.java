@@ -1,9 +1,5 @@
 public class Solution {
     public double pow(double x, int n) {
-        if (n == 0)
-            return 1;
-        if (x == 1)
-            return 1;
         boolean neg = false;
         if (n < 0) {
             neg = true;

@@ -1,63 +1,48 @@
 public class Solution {
     public String addBinary(String a, String b) {
-        if (a == null || a.isEmpty())
+        int m = a.length();
+        int n = b.length();
+        if (m == 0)
             return b;
-        if (b == null || b.isEmpty())
+        if (n == 0)
             return a;
-        int i = a.length() - 1;
-        int j = b.length() - 1;
-        Deque<Character> stack = new LinkedList<Character>();
+        int p1 = m - 1;
+        int p2 = n - 1;
+        String res = "";
         boolean cf = false;
-        while (i >= 0 && j >= 0) {
-            char c1 = a.charAt(i);
-            char c2 = b.charAt(j);
-            if (c1 == c2) {
-                if (cf) {
-                    stack.push('1');
+        while (p1 >= 0 || p2 >= 0) {
+            char c1 = '0';
+            char c2 = '0';
+            if (p1 >= 0) {
+                c1 = a.charAt(p1);
+                p1--;
+            }
+            if (p2 >= 0) {
+                c2 = b.charAt(p2);
+                p2--;
+            }
+            if (cf) {
+                if (c1 == '1' && c2 == '1') {
+                    res = "1" + res;
+                } else if (c1 == '1' || c2 == '1') {
+                    res = "0" + res;
+                } else {
+                    res = "1" + res;
                     cf = false;
-                } else
-                    stack.push('0');
-                if (c1 == '1')
-                    cf = true;
+                }
             } else {
-                if (cf) {
-                    stack.push('0');
-                } else
-                    stack.push('1');
+                if (c1 == '1' && c2 == '1') {
+                    res = "0" + res;
+                    cf = true;
+                } else if (c1 == '1' || c2 == '1') {
+                    res = "1" + res;
+                } else {
+                    res = "0" + res;
+                }
             }
-            i--;
-            j--;
-        }
-        while (i >= 0) {
-            char c = a.charAt(i);
-            if (cf && c == '1')
-                stack.push('0');
-            else if (cf) {
-                stack.push('1');
-                cf = false;
-            }
-            else
-                stack.push(c);
-            i--;
-        }
-        while (j >= 0) {
-            char c = b.charAt(j);
-            if (cf && c == '1')
-                stack.push('0');
-            else if (cf) {
-                stack.push('1');
-                cf = false;
-            }
-            else
-                stack.push(c);
-            j--;
         }
         if (cf)
-            stack.push('1');
-        StringBuilder sb = new StringBuilder();
-        while (stack.size() > 0) {
-            sb.append(stack.pop());
-        }
-        return sb.toString();
+            res = "1" + res;
+        return res;
     }
 }

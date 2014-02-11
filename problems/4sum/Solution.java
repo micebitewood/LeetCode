@@ -1,38 +1,40 @@
 public class Solution {
+    ArrayList<ArrayList<Integer>> res;
     public ArrayList<ArrayList<Integer>> fourSum(int[] num, int target) {
-        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
-        if (num == null || num.length == 0)
-            return res;
+        res = new ArrayList<ArrayList<Integer>>();
         Arrays.sort(num);
-        for (int i = 0; i < num.length - 2; i++) {
+        int length = num.length;
+        for (int i = 0; i < length; i++) {
             if (i > 0 && num[i] == num[i - 1])
                 continue;
             int n1 = num[i];
-            for (int j = i + 1; j < num.length - 1; j++) {
+            for (int j = i + 1; j < length; j++) {
                 if (j > i + 1 && num[j] == num[j - 1])
                     continue;
                 int n2 = num[j];
-                int left = j + 1;
-                int right = num.length - 1;
-                while (left < right) {
-                    if (num[left] + num[right] + n1 + n2 == target) {
+                int t = target - n1 - n2;
+                int l = j + 1;
+                int r = length - 1;
+                while (l < r) {
+                    int n3 = num[l];
+                    int n4 = num[r];
+                    if (n3 + n4 == t) {
                         ArrayList<Integer> list = new ArrayList<Integer>();
                         list.add(n1);
                         list.add(n2);
-                        list.add(num[left]);
-                        list.add(num[right]);
+                        list.add(n3);
+                        list.add(n4);
                         res.add(list);
-                        left++;
-                        while (left < right && num[left] == num[left - 1])
-                            left++;
-                    } else if (num[left] + num[right] + n1 + n2 < target) {
-                        left++;
-                        while (left < right && num[left] == num[left - 1])
-                            left++;
+                        while (l < r && num[l] == n3) {
+                            l++;
+                        }
+                        while (l < r && num[r] == n4) {
+                            r--;
+                        }
+                    } else if (n3 + n4 < t) {
+                        l++;
                     } else {
-                        right--;
-                        while (left < right && num[right] == num[right + 1])
-                            right--;
+                        r--;
                     }
                 }
             }
